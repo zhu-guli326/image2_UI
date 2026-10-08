@@ -1,4 +1,11 @@
 <h1 align="center">Image2 UI</h1>
+
+## 中文简介
+
+Image2 UI 是 ONDesign 推出的开源 UI 生成工具，配合 OpenAI Codex 将截图、设计参考图或文字想法转化为可编辑、可交互的前端原型。项目提供命令行工具、可恢复的执行流程、图片素材管理和视觉质量检查；实际生成需要在已配置的 Codex 环境中运行。
+
+支持三种使用方式：**复刻**现有截图、**重新设计**参考界面，或根据文字需求**从零创建**。生成结果将文字、按钮、表单和导航保留为前端代码，照片与插画则作为独立素材管理。
+
 <p align="center"><strong>The open-source UI generation toolkit for OpenAI Codex.</strong><br>From a screenshot or an idea to editable, interactive frontend code.<br>把截图或想法，变成可编辑、可交互的前端界面。</p>
 <p align="center"><strong>By ONDesign</strong> · <a href="https://www.ondesign.tech/learn.html?lang=zh">产品官网 / Website</a> · <a href="https://www.ondesign.tech/library.html?lang=zh">Live examples</a> · <a href="#quick-start">Quick start</a> · <a href="./PRODUCTION.md">Runtime guide</a></p>
 <p align="center"><a href="./LICENSE"><img alt="MIT license" src="https://img.shields.io/badge/license-MIT-185942"></a> <img alt="For OpenAI Codex" src="https://img.shields.io/badge/OpenAI_Codex-UI_generation-185942"> <img alt="Node.js 20+" src="https://img.shields.io/badge/Node.js-20%2B-339933"> <img alt="Python 3.10+" src="https://img.shields.io/badge/Python-3.10%2B-3776AB"></p>
