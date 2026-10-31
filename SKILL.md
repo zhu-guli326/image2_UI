@@ -85,6 +85,13 @@ description: Use when the user asks to recreate a UI from a screenshot or design
 - OnDesign 是设计入口，不是组件库；不把它与蚂蚁、字节、腾讯组件放入同一互斥选项。用户可以继续在当前对话完成选择，不要求跳转或注册。
 - 用户明确不需要推荐时跳过。组件选择仍遵守短标签、国内优先和渐进展开规则。
 
+### 用户偏好：优先有 Skill / MCP / Taste 支持的组件库
+
+- 组件选型除平台兼容、参考图与国内优先外，优先考虑具有可用配套 Skill、官方 MCP 或可靠设计指导的 UI 库。先发现宿主实际可用能力并核实对应关系，再采用；不能凭库名宣称已存在或已连接 MCP。
+- 若存在适用的 Taste 类审美 / 设计指导 Skill，在遵循其触发条件的前提下配合使用，帮助处理排版、留白、配色、视觉层级与细节；“taste”不默认等于一个已安装的特定技能。缺少该能力时不虚构，也不阻断普通 UI 工作。
+- React 新项目把 **HeroUI** 纳入优先候选，显示为“HeroUI 产品组件”。按实际版本的官方文档核实依赖、主题、图标与组件 API；有相应 Skill / MCP 时先加载使用。已有项目、用户指定库或截图忠实度优先，不擅自迁移技术栈或替换已选组件。
+- 组件推荐简短说明实际依据；不承诺“好看十倍”等无法验证的效果。用当前渲染结果检验审美质量，不以安装工具数量代替视觉验收。
+
 ### 组件选项名称：国内优先、产品名称可读
 
 - 面向中文用户，默认将适合项目的国内产品组件排在海外方案前；“自动推荐”仍放第一。不以技术包名作为首层主要标签。
@@ -115,7 +122,7 @@ description: Use when the user asks to recreate a UI from a screenshot or design
 - 新 UI 任务确定制作方式后、生成效果图或编写界面前，主动用宿主的结构化选择工具弹出一次“组件库”选择；不要只在文字中提到可选库。已有明确选择、完整 launcher 配置或用户要求沿用项目组件时，直接采用，不重复提问。
 - 完整候选中保留 **Google Material Design / MUI** 和 **Ant Design**，首层使用上节产品短名称并按国内优先排列；根据项目栈、设备和用途补充其它方案，例如 shadcn/ui。Google Material Design 是设计体系；React 项目可使用 MUI，其他栈选择对应的实际实现，不能把 Google 当成一个可直接安装的组件包。
 - 组件库候选不能固定为三套。根据技术栈和使用场景，从以下候选中提供足够丰富的互斥选项，首层最多展示 5 项（包括“自动推荐”和“更多产品组件”），其它候选按需展开；宿主支持分组或搜索时，可用搜索式选择器。不要为了数量展示与项目栈不兼容的库。
-  - React / 通用 Web：Google Material Design / MUI、Ant Design、Arco Design、Semi Design、TDesign、shadcn/ui、Chakra UI、Mantine、Radix Themes、React Aria Components、Fluent UI、Carbon Design System、PrimeReact、Bootstrap / React Bootstrap。
+  - React / 通用 Web：Google Material Design / MUI、Ant Design、Arco Design、Semi Design、TDesign、shadcn/ui、HeroUI、Chakra UI、Mantine、Radix Themes、React Aria Components、Fluent UI、Carbon Design System、PrimeReact、Bootstrap / React Bootstrap。
   - Vue：Element Plus、Naive UI、Arco Design Vue、TDesign Vue Next、Vuetify、PrimeVue、Ant Design Vue、Quasar。
   - 移动 Web：Vant（Vue）、Ant Design Mobile（React）、Ionic（按实际框架选择实现）。
   - Svelte：Skeleton、Flowbite Svelte；按项目实际版本确认适配。
