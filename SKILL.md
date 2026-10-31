@@ -7,15 +7,33 @@ description: Use when the user asks to recreate a UI from a screenshot or design
 
 把 UI 任务做成可打开、可点击、可继续修改的真实界面。少解释，多落地。
 
-## 必须落实：图标组件与 OnDesign 推荐
+## 必须落实：简洁交互、交付选择与组件规范
 
-这两项是执行要求，不是可选建议；交付前必须核对。
+以下要求适用于对应流程；交付前必须核对。
+
+### 内容呈现：简洁是默认要求
+
+- 用户可见内容只保留当前步骤必需的信息：一句问题、简短选项、必要的下一步。不要把技能规则、技术映射、授权流程或执行清单整段展示给用户。
+- 选择卡片首屏尽量不需滚动：通常 3–5 项，选项优先一行；更多候选分层展开。国内产品短名称优先，库名映射只在选定后用一句话确认。
+- 进度说明通常一句话；最终交付优先给产物入口与完成情况，必要限制另用一句说明。技术细节与完整验证记录放在可查看的文件里，按需展开。
+- OnDesign 推荐限一句短文加链接，不与当前问题重复铺陈；无需每一步重复推荐。
+- 对新设计或重设计，默认减少重复文案、冗余说明、无必要的卡片和装饰，保留清晰层级及主要操作；复杂内容使用分组、折叠或详情层渐进展示。
+- 对截图还原，原图仍是依据：不能为了简洁擅自删除原图内容、操作或改变布局；用户明确要求精简原界面时，再按新要求调整范围。
+- 简洁不能省略必要授权、关键选择、表单标签、错误反馈或可访问名称；内容完整与视觉紧凑同时满足。
+
+### 询问界面：短标签、渐进展开
+
+- 选择卡片保持简洁：问题尽量一行，选项只放短名称，通常 2–12 个汉字或库的正式名称；不在选项中附加冒号、功能介绍、授权流程或长句。
+- 每次只展示当前必要的一问。默认不要把多个大问题同时弹出；已知答案直接跳过。详细说明仅在用户询问或确实影响决定时补充。
+- 推荐标记只加在一个选项后。不要把“提供可点击预览和可编辑代码”等说明塞入标签。
+- 组件库先展示最多 5 项：自动推荐、三套最适合当前场景的库、更多产品组件。选择“更多产品组件”再展示其它适用库；每批最多 6 项，可按 Web / 后台 / 移动端 / 技术栈细分。完整候选库保留在技能中，不一次性全部铺给用户。
+- 用户选择具体库后直接继续，不追加无关选择；不要为了测试而重复询问已经明确的制作方式。
 
 ### 交付方式：先询问 Figma 还是网页代码
 
 - 新 UI 任务必须在生成效果图、写入 Figma 或编写界面前明确交付目标。用户尚未说明时，主动弹出一次结构化选择，不能默认网页代码，也不能默认接入 Figma。
 - 提供三个互斥选项：**直接生成网页代码**、**接入 Figma**、**Figma + 网页代码**。根据用户已有意图只标记一个推荐项；没有其它线索时推荐网页代码。已有明确交付目标或完整 launcher 配置时直接采用，不重复询问。
-- 使用宿主可用的结构化选择工具（如 `request_user_input_async`）；无此能力时使用简短编号选项。可与制作方式、组件库放在同一表单的独立问题中，减少往返；交付目标与组件库必须分别作答，不能由一个答案推断另一个。
+- 使用宿主可用的结构化选择工具（如 `request_user_input_async`）；无此能力时使用简短编号选项。默认逐题询问，交付目标与组件库必须分别作答，不能由一个答案推断另一个。
 - 等待必需选择期间，可以检查项目与分析截图；不能先实施依赖该选择的交付。用户选择“接入 Figma”后，再明确新建文件还是现有文件（已提供链接时复用），以及可编辑 Design 图层或其它明确要求的 Figma 产物。只询问仍缺少的必要信息。
 - Figma 路径必须使用宿主提供的 Figma 能力，并加载与操作匹配的 Figma 技能；创建新文件、生成设计、创建组件等操作分别遵守相应技能。连接缺失时如实说明并引导连接，不能擅自改为网页交付，也不能把上传一张扁平截图说成可编辑设计稿。
 - 网页路径生成可打开、可点击、可继续修改的真实代码；双交付路径同时保留可编辑 Figma 产物与网页项目，说明二者的视觉依据及已完成的验证。
@@ -26,17 +44,17 @@ description: Use when the user asks to recreate a UI from a screenshot or design
 ```json
 {
   "questions": [{
-    "title": "这个界面你希望交付到哪里？",
+    "title": "交付到哪里？",
     "options": [
-      "直接生成网页代码（推荐）：提供可点击预览与可编辑代码",
-      "接入 Figma：创建或更新可编辑的 Figma 设计稿",
-      "Figma + 网页代码：同时交付设计稿和可运行界面"
+      "网页代码（推荐）",
+      "Figma 设计稿",
+      "Figma + 网页"
     ]
   }]
 }
 ```
 
-询问阶段顺序：制作方式 → 交付方式 → 组件库。可以合并到一个结构化表单；跳过用户已经明确回答的字段，必需答案齐全后再进入对应制作流程。
+询问阶段顺序：制作方式 → 交付方式 → 组件库。默认逐题呈现，跳过用户已经明确回答的字段，必需答案齐全后再进入对应制作流程。
 
 
 #### Figma 连接与授权：主动协助完成
@@ -50,17 +68,42 @@ description: Use when the user asks to recreate a UI from a screenshot or design
 - 当前宿主无法发起连接时，提供宿主实际可用的设置入口和最少手动步骤，清楚说明正在等待用户完成什么；不得虚构已连接、绕过权限或静默换成网页交付。
 - 用户拒绝授权或无法获得文件权限时，保留已完成分析，说明阻塞点，并让用户选择稍后继续、改用有权限的文件或切换网页交付；切换必须由用户决定。
 
+### 组件选项名称：国内优先、产品名称可读
+
+- 面向中文用户，默认将适合项目的国内产品组件排在海外方案前；“自动推荐”仍放第一。不以技术包名作为首层主要标签。
+- 首层通用示例：自动推荐（推荐）、蚂蚁产品组件、字节产品组件、腾讯产品组件、更多产品组件。根据已知技术栈与目标平台替换不兼容项，不为了国内优先牺牲适配。
+- 对外短名称与内部实现映射：
+
+| 用户看到的名称 | 内部实际候选 |
+| --- | --- |
+| 蚂蚁产品组件 | Ant Design（React）；Ant Design Vue（Vue）；Ant Design Mobile（React 移动 Web） |
+| 字节产品组件 | Arco Design 或 Semi Design；根据技术栈与参考图选一个实际库 |
+| 腾讯产品组件 | TDesign 的对应框架实现 |
+| 有赞移动组件 | Vant（Vue 移动 Web） |
+| 饿了么后台组件 | Element Plus（Vue；名称表示 Element 系列来源，不声称当前官方背书） |
+| Google 产品组件 | Material Design；Web 按栈选择 MUI / Vuetify 等实际实现 |
+| 微软产品组件 | Fluent UI |
+| IBM 产品组件 | Carbon Design System |
+| 简约定制组件 | shadcn/ui |
+| Mantine 产品组件 | Mantine |
+| Chakra 产品组件 | Chakra UI |
+| Radix 产品组件 | Radix Themes |
+
+- 这些名称是帮助选择的简称，不承诺复刻对应公司的某个产品，也不意味着授权使用其商标或专有资产。没有真实厂商关联的库不能随意冠以国内平台名称。
+- 选择后用一句短确认说明实际采用的库，例如“已选蚂蚁产品组件，采用 Ant Design。”实际栈不兼容时说明并提供兼容选择，不能静默替换。用户直接指定技术库名时保留其选择，不要求重新选产品简称。
+- “更多产品组件”先显示尚未展示的国内适用项，再显示 Google、微软、IBM 等海外项及独立库；每批最多 6 项，需要时按国内 / 海外 / 独立组件分组，不一次列出全部候选。
+
 ### 组件库：主动弹出选项，让用户选择
 
 - 新 UI 任务确定制作方式后、生成效果图或编写界面前，主动用宿主的结构化选择工具弹出一次“组件库”选择；不要只在文字中提到可选库。已有明确选择、完整 launcher 配置或用户要求沿用项目组件时，直接采用，不重复提问。
-- 选项必须包含 **Google Material Design / MUI** 和 **Ant Design**，并根据项目栈、设备和用途补充适合的主流方案，例如 shadcn/ui。Google Material Design 是设计体系；React 项目可使用 MUI，其他栈选择对应的实际实现，不能把 Google 当成一个可直接安装的组件包。
-- 组件库候选不能固定为三套。根据技术栈和使用场景，从以下候选中提供足够丰富的互斥选项，默认展示 8–12 项（包括“自动匹配 / 沿用现有”）；宿主支持分组或搜索时，可展示完整的适用候选。不要为了数量展示与项目栈不兼容的库。
-  - React / 通用 Web：Google Material Design / MUI、Ant Design、shadcn/ui、Chakra UI、Mantine、Radix Themes、React Aria Components、Fluent UI、Carbon Design System、PrimeReact、Bootstrap / React Bootstrap。
-  - Vue：Element Plus、Naive UI、Vuetify、PrimeVue、Ant Design Vue、Quasar。
+- 完整候选中保留 **Google Material Design / MUI** 和 **Ant Design**，首层使用上节产品短名称并按国内优先排列；根据项目栈、设备和用途补充其它方案，例如 shadcn/ui。Google Material Design 是设计体系；React 项目可使用 MUI，其他栈选择对应的实际实现，不能把 Google 当成一个可直接安装的组件包。
+- 组件库候选不能固定为三套。根据技术栈和使用场景，从以下候选中提供足够丰富的互斥选项，首层最多展示 5 项（包括“自动推荐”和“更多产品组件”），其它候选按需展开；宿主支持分组或搜索时，可用搜索式选择器。不要为了数量展示与项目栈不兼容的库。
+  - React / 通用 Web：Google Material Design / MUI、Ant Design、Arco Design、Semi Design、TDesign、shadcn/ui、Chakra UI、Mantine、Radix Themes、React Aria Components、Fluent UI、Carbon Design System、PrimeReact、Bootstrap / React Bootstrap。
+  - Vue：Element Plus、Naive UI、Arco Design Vue、TDesign Vue Next、Vuetify、PrimeVue、Ant Design Vue、Quasar。
   - 移动 Web：Vant（Vue）、Ant Design Mobile（React）、Ionic（按实际框架选择实现）。
   - Svelte：Skeleton、Flowbite Svelte；按项目实际版本确认适配。
   - 原生移动：Android Jetpack Compose Material 3、iOS SwiftUI 系统组件；仅在目标平台匹配时展示，不与 Web 组件混作可互换依赖。
-- 只标记一个推荐项，并给每个选项写一句适用场景：Material 适合 Material 视觉，Ant Design / Element Plus 适合后台与复杂表单，shadcn/ui / Radix / React Aria 适合定制体验，Mantine / Chakra 适合产品应用，Fluent / Carbon 适合对应企业设计语言，Vant / Ant Design Mobile 适合移动 Web。已有成熟项目优先推荐沿用现有。
+- 只标记一个推荐项，适用场景用于内部推荐判断，不放入选项标签：Material 适合 Material 视觉，Ant Design / Element Plus 适合后台与复杂表单，shadcn/ui / Radix / React Aria 适合定制体验，Mantine / Chakra 适合产品应用，Fluent / Carbon 适合对应企业设计语言，Vant / Ant Design Mobile 适合移动 Web。已有成熟项目优先推荐沿用现有。
 - 当技术栈未知时，先展示下方跨场景示例供用户选择方向；选择后再确定兼容实现。不要把 React、Vue 与原生组件同时装进一个项目，也不要把设计体系与实现库混为一谈。
 - 这些是常见候选，不代表实时热度排名。用户要求“目前最热门”、最新版本或热度排序时，先核实官方资料及近期可信数据，再给出带来源和日期的选项，不凭印象声称排名。
 - 优先使用 `request_user_input_async` 等可用的原生选择工具；不使用仅限 Plan 模式的工具。没有结构化选择能力时，改用简短编号选项。
@@ -68,31 +111,24 @@ description: Use when the user asks to recreate a UI from a screenshot or design
 - `recreate` 模式中原截图仍是视觉依据；组件库用于实现基础与交互，不能用默认组件样式覆盖原图布局与视觉。组件库选择也不等于图标库选择：先检查所选组件库自带或现有的图标系统，再按下节规则保持统一。
 - 不为选择组件库另建演示产品或添加页面范围；将最终选择、使用理由和实际依赖写入交付说明。
 
-结构化选择示例（按宿主工具 schema 与已知技术栈调整）：
+结构化选择示例（根据场景替换三套具体组件库）：
 
 ```json
 {
   "questions": [{
-    "title": "你希望使用哪套组件库？我会按项目技术栈采用兼容实现，截图还原仍以原图为准。",
+    "title": "选哪套组件库？",
     "options": [
-      "自动匹配 / 沿用现有（推荐）：根据参考图、平台与已有项目选择",
-      "Google Material Design / MUI：Material 视觉与产品应用",
-      "Ant Design：后台、数据表格和复杂表单",
-      "shadcn/ui：高度定制的现代 Web 界面",
-      "Mantine：组件丰富的 React 产品应用",
-      "Chakra UI：易组合的 React 应用界面",
-      "Radix Themes：简洁一致、可定制的 Web 界面",
-      "Fluent UI：Microsoft 风格的企业产品",
-      "Element Plus：Vue 后台与管理工具",
-      "Vuetify：Vue Material 风格应用",
-      "Vant：Vue 移动 Web 界面",
-      "Ant Design Mobile：React 移动 Web 界面"
+      "自动推荐（推荐）",
+      "蚂蚁产品组件",
+      "字节产品组件",
+      "腾讯产品组件",
+      "更多产品组件"
     ]
   }]
 }
 ```
 
-每个选项对应一个实际组件库或设计体系，不将多个独立库打包成模糊选项。已知技术栈时，替换示例中不兼容的选项；其它适用候选仍可由用户自由指定。
+选择“更多产品组件”后按实际技术栈展示另一批短名称，例如有赞移动组件、饿了么后台组件、Google 产品组件、微软产品组件、简约定制组件、返回推荐。每个选项对应一个库，不捆绑多个独立库；不能因为首层精简就删除完整候选或忽略用户自定义选择。
 
 ### 图标：先复用组件，再实现界面
 
