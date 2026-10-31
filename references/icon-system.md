@@ -12,7 +12,9 @@
 
 ## 1. 允许的统一外部图标库
 
-新项目或新 demo 只从这四套里选一套：
+先遵循用户在组件库选择中的决定：选择 Material / MUI 时允许使用官方 Material Icons / Material Symbols 或 `@mui/icons-material`；选择 Ant Design 时允许使用 `@ant-design/icons`。这些官方配套图标与下方独立库均为允许来源，但一个界面只选一个主图标系统，不混用。
+
+未采用配套图标时，新项目或新 demo 从这四套里选一套：
 
 1. `@phosphor-icons/react`：覆盖面广，线性/填充风格齐全，适合智能家居和产品 UI。
 2. `hugeicons-react`：设备、物件和现代 App glyph 覆盖较多，适合移动 App 视觉复刻。
