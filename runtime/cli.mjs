@@ -2,7 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { createRuntime } from "./runner.mjs";
 import { StateStore } from "./state-store.mjs";
-import { createLegacyToolRegistry } from "./tools/legacy-cli.mjs";
+import { AGENT_PROVIDERS, createLegacyToolRegistry, resolveAgentProvider } from "./tools/legacy-cli.mjs";
 import { buildDagPlan } from "./scheduler/dag.mjs";
 import {
   assertWorkflowInputs,
@@ -16,6 +16,7 @@ const VALUE_OPTIONS = new Map([
   ["--run", "runId"],
   ["--max-iterations", "maxIterations"],
   ["--max-parallel", "maxParallel"],
+  ["--agent", "agent"],
   ["--agent-command", "agentCommand"],
   ["--model", "model"],
   ["--mode", "mode"],
@@ -54,6 +55,7 @@ export async function runRuntimeCli(action, argv, options = {}) {
       store,
       tools: createLegacyToolRegistry({
         repoRoot: options.repoRoot,
+        agent: parsed.agent,
         agentCommand: parsed.agentCommand,
         model: parsed.model,
       }),
@@ -154,6 +156,7 @@ export function buildRunInput(target, parsed) {
   const effectPolicy = workflowPolicy(mode, parsed);
   const executionMode = parsed.execution || "single-agent";
   const maxParallel = parsed.maxParallel ?? (executionMode === "multi-agent" ? 2 : undefined);
+  const agentProvider = resolveAgentProvider({ agent: parsed.agent, agentCommand: parsed.agentCommand });
 
   return {
     target,
@@ -173,9 +176,9 @@ export function buildRunInput(target, parsed) {
       allowWorkspaceMutation: true,
     },
     runtime: {
-      agentProvider: "codex-cli",
+      agentProvider: AGENT_PROVIDERS[agentProvider].stateProvider,
       executionMode,
-      agentCommand: parsed.agentCommand || "codex",
+      agentCommand: parsed.agentCommand || process.env.IMAGE2_AGENT_COMMAND || AGENT_PROVIDERS[agentProvider].command,
       model: parsed.model || null,
       noBrowser: parsed.noBrowser,
       requirePreflight: true,
@@ -198,7 +201,7 @@ function exitCodeFor(action, status) {
 function printHelp(action) {
   const usage = action === "run"
     ? [
-        "Usage: image2-ui run <project-dir> --task \"...\" [--mode recreate|redesign|create] [--reference FILE] [--execution single-agent|multi-agent] [--max-parallel N] [--require-effect-review] [--max-iterations N] [--dry-run] [--json]",
+        "Usage: image2-ui run <project-dir> --task \"...\" [--mode recreate|redesign|create] [--reference FILE] [--execution single-agent|multi-agent] [--agent codex|claude-code] [--max-parallel N] [--require-effect-review] [--max-iterations N] [--dry-run] [--json]",
         "",
         "Workflow modes:",
         "  recreate  Screenshot/reference -> UI. Original reference is the source of truth; no effect image gate.",
@@ -208,6 +211,10 @@ function printHelp(action) {
         "Execution:",
         "  single-agent  Runtime invokes one implementation/fix agent at a time (default).",
         "  multi-agent   Runtime owns a subordinate DAG Scheduler for specialist analysis, implementation, review, QA, and release.",
+        "",
+        "Agent:",
+        "  codex        Run implementation/fix work through `codex exec` (default).",
+        "  claude-code  Run implementation/fix work through `claude -p`. Also selected by IMAGE2_AGENT=claude-code or --agent-command claude.",
         "",
         "Defaults: with --reference => recreate; without --reference => create. Multi-agent defaults to maxParallel=2.",
       ].join("\n")

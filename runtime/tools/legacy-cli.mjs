@@ -82,10 +82,30 @@ function scriptTool(root, file, name, build, allow = [0]) {
   };
 }
 
+export const AGENT_PROVIDERS = {
+  codex: { command: "codex", stateProvider: "codex-cli", label: "Codex CLI" },
+  "claude-code": { command: "claude", stateProvider: "claude-code-cli", label: "Claude Code CLI" },
+};
+
+export function resolveAgentProvider({ agent = null, agentCommand = null } = {}) {
+  const requested = agent || process.env.IMAGE2_AGENT || null;
+  if (requested) {
+    const key = String(requested).toLowerCase();
+    if (!AGENT_PROVIDERS[key]) {
+      throw new Error(`Unknown agent provider: ${requested}. Use one of: ${Object.keys(AGENT_PROVIDERS).join(", ")}`);
+    }
+    return key;
+  }
+  const command = agentCommand || process.env.IMAGE2_AGENT_COMMAND || "";
+  const base = path.basename(command).replace(/\.(cmd|exe|bat)$/i, "").toLowerCase();
+  return base === "claude" ? "claude-code" : "codex";
+}
+
 export function createLegacyToolRegistry(options = {}) {
   const root = path.resolve(options.repoRoot || defaultRoot);
   const tools = new ToolRegistry();
-  const agentCommand = options.agentCommand || process.env.IMAGE2_AGENT_COMMAND || "codex";
+  const provider = resolveAgentProvider(options);
+  const agentCommand = options.agentCommand || process.env.IMAGE2_AGENT_COMMAND || AGENT_PROVIDERS[provider].command;
   const python = process.env.PYTHON || (process.platform === "win32" ? "python" : "python3");
 
   tools.register(scriptTool(root, "doctor.mjs", "env.doctor", () => [], [0, 1]));
@@ -112,15 +132,18 @@ export function createLegacyToolRegistry(options = {}) {
     concurrencyKey: "workspace-write",
     timeoutMs: 900_000,
     async probe() {
-      return { available: await commandExists(agentCommand), command: agentCommand };
+      return { available: await commandExists(agentCommand), command: agentCommand, provider };
     },
     async invoke(input, ctx) {
-      const args = buildCodexArgs(input, options.model);
+      const args = provider === "claude-code" ? buildClaudeCodeArgs(input, options.model) : buildCodexArgs(input, options.model);
+      let data;
       try {
-        return { ok: true, data: await runProcess(agentCommand, args, { cwd: input.target, signal: ctx.signal, timeoutMs: ctx.timeoutMs }) };
+        data = await runProcess(agentCommand, args, { cwd: input.target, signal: ctx.signal, timeoutMs: ctx.timeoutMs });
       } catch (error) {
-        throw classifyCapabilityError(error, "Codex CLI is unavailable");
+        throw classifyCapabilityError(error, `${AGENT_PROVIDERS[provider].label} is unavailable`);
       }
+      if (provider === "claude-code") await writeClaudeCodeResult(data, input.outputFile);
+      return { ok: true, data };
     },
   });
   tools.register({
@@ -213,4 +236,45 @@ export function buildCodexArgs(input, model = null) {
   if (input.outputFile) args.push("-o", input.outputFile);
   args.push(input.prompt);
   return args;
+}
+
+// Claude Code runs headless with `claude -p`. The prompt goes directly after -p
+// because --allowedTools takes a variadic value and would swallow a trailing
+// positional prompt. Write access defaults to acceptEdits (file edits only, no
+// shell); read access only allows read tools. Both can be widened per project
+// with IMAGE2_CLAUDE_PERMISSION_MODE / IMAGE2_CLAUDE_ALLOWED_TOOLS.
+export function buildClaudeCodeArgs(input, model = null, env = process.env) {
+  const readOnly = input.access === "read";
+  const permissionMode = env.IMAGE2_CLAUDE_PERMISSION_MODE || (readOnly ? "dontAsk" : "acceptEdits");
+  const allowedTools = env.IMAGE2_CLAUDE_ALLOWED_TOOLS || (readOnly ? "Read,Grep,Glob" : "");
+  const args = [
+    "-p",
+    input.prompt,
+    "--output-format",
+    "json",
+    "--no-session-persistence",
+    "--permission-mode",
+    permissionMode,
+  ];
+  if (model) args.push("--model", model);
+  if (allowedTools) args.push("--allowedTools", allowedTools);
+  return args;
+}
+
+async function writeClaudeCodeResult(data, outputFile) {
+  let message = data?.stdout || "";
+  let parsed = null;
+  try { parsed = JSON.parse(message); } catch {}
+  if (parsed && typeof parsed === "object") {
+    if (parsed.is_error) {
+      const error = new Error(`Claude Code reported an error: ${String(parsed.result || parsed.subtype || "unknown").slice(0, 1000)}`);
+      error.code = "legacy-cli-failed";
+      throw error;
+    }
+    message = typeof parsed.result === "string" ? parsed.result : message;
+    data.result = message;
+  }
+  if (!outputFile) return;
+  await fs.mkdir(path.dirname(outputFile), { recursive: true });
+  await fs.writeFile(outputFile, message, "utf8");
 }

@@ -1,7 +1,7 @@
 {
   "name": "image2-ui-skill",
-  "version": "0.1.0",
-  "description": "Image2 UI by ONDesign: turn screenshots and ideas into editable, interactive frontend interfaces with Codex.",
+  "version": "0.2.0",
+  "description": "Image2 UI by ONDesign: turn screenshots and ideas into editable, interactive frontend interfaces with Codex, Claude Code, or other Agent Skills hosts.",
   "type": "module",
   "private": false,
   "license": "MIT",
@@ -23,9 +23,9 @@
     "CONTRIBUTING.md",
     "CHANGELOG.md",
     "LICENSE",
-    "validate.ps1",
     "agents/",
     "references/",
+    "scripts/validate.mjs",
     "scripts/doctor.mjs",
     "scripts/image2-ui",
     "scripts/image2_asset.py",
@@ -36,7 +36,7 @@
     "scripts/ui_output_audit.mjs",
     "scripts/ui_output_audit_core.mjs",
     "scripts/ui_harness_guard.mjs",
-    "scripts/ui_harness_guard_v2.mjs",
+    "scripts/ui_harness_guard_suite.mjs",
     "scripts/ui_asset_plan_guard.mjs",
     "scripts/ui_reference_asset_guard.mjs",
     "scripts/ui_recreate_image2_policy_guard.mjs",
@@ -52,7 +52,8 @@
   "scripts": {
     "test": "node --test",
     "doctor": "node scripts/image2-ui doctor",
-    "pack:check": "npm pack --dry-run"
+    "pack:check": "npm pack --dry-run",
+    "validate": "node scripts/validate.mjs"
   },
   "engines": {
     "node": ">=20",
@@ -61,6 +62,8 @@
   "keywords": [
     "codex",
     "openai-codex",
+    "agent-skills",
+    "claude-code",
     "image2",
     "image-to-ui",
     "screenshot-to-code",

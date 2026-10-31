@@ -3,7 +3,7 @@
 import path from "node:path";
 import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
-import { runHarnessGuard } from "./ui_harness_guard_v2.mjs";
+import { runHarnessGuard } from "./ui_harness_guard_suite.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const args = process.argv.slice(2);

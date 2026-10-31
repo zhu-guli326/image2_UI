@@ -69,11 +69,12 @@ The output keeps text, buttons, forms and navigation in code. Photos, product im
 - **Runs can be inspected and resumed.** The [runtime](./runtime/) stores state and an event history so interrupted work can be reconciled and continued.
 - **Verification is part of the workflow.** Audit, comparison and bounded fix loops check generated output against the active reference.
 - **Multi-agent execution is available.** The runtime's [scheduler](./runtime/scheduler/) coordinates specialist implementation, review and QA work within the same run lifecycle.
+- **Works in Claude Code too.** Install the folder as a Claude Code skill, or run the runtime with `--agent claude-code` so implementation and fix work goes through `claude -p`. See [host adapters](./references/host-adapters.md).
 - **Image generation is configurable.** The [asset wrapper](./scripts/image2_asset.py) supports the project's image-generation channels and writes asset provenance records. See the [channel configuration](./PRODUCTION.md#image2-channel-policy).
 
 ## Quick start
 
-You need Node.js 20+, Python 3.10+, an authenticated Codex CLI for actual agent execution, and a configured image-generation channel when your workflow needs generated images. Browser render checks use Playwright. See the [runtime guide](./PRODUCTION.md) for environment setup.
+You need Node.js 20+, Python 3.10+, an authenticated Codex CLI (or Claude Code with `--agent claude-code`) for actual agent execution, and a configured image-generation channel when your workflow needs generated images. Browser render checks use Playwright. See the [runtime guide](./PRODUCTION.md) for environment setup.
 
 Clone the source and inspect the available commands:
 
@@ -99,6 +100,8 @@ node scripts/image2-ui inspect ./my-ui --latest --json
 node scripts/image2-ui resume ./my-ui --latest
 ```
 
+To use it as a Claude Code skill instead, clone it into `~/.claude/skills/image-to-ui-skill` (all projects) or `.claude/skills/image-to-ui-skill` (one project).
+
 Replace `./reference.png` with your own image. An inspection reports the run's actual status; a paused or blocked run is not a finished interface. For using the workflow inside an existing Codex session, see the [workflow specification](./SKILL.md).
 
 ## What is in this repository?
@@ -119,9 +122,8 @@ The website and case gallery are maintained in [ui_case](https://github.com/zhu-
 Image2 UI is MIT-licensed. Contributions can improve reference fidelity, accessibility checks, asset handling, workflow recovery and documentation. See [Contributing](./CONTRIBUTING.md) for the local gates and [Changelog](./CHANGELOG.md) for development history.
 
 ```bash
-npm test
+npm run validate
 npm run doctor
-npm run pack:check
 ```
 
 Diagnostics depend on your local tools and image channels; resolve missing capabilities before attempting a real generation run.
