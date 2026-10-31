@@ -1,3 +1,6 @@
+// Full Harness guard suite: the base glyph/asset guard in ui_harness_guard.mjs
+// plus asset-plan, reference-asset, recreate policy, visual-role, freeform
+// layout, screen safe-area, and design-system guards. ui_output_audit uses this.
 import fs from "node:fs";
 import path from "node:path";
 import { runHarnessGuard as runBaseHarnessGuard } from "./ui_harness_guard.mjs";

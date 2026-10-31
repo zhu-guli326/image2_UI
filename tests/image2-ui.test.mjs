@@ -105,26 +105,27 @@ test("skill exposes the three workflow contracts and standalone gallery", () => 
   assert.match(skill, /1\. `recreate` — 截图 \/ 设计稿 → UI/);
   assert.match(skill, /2\. `redesign` — 参考图 → 新设计 → UI/);
   assert.match(skill, /3\. `create` — 描述 → 新设计 → UI/);
-  assert.match(skill, /Do not treat Effect Image as a universal mandatory step/);
-  assert.match(skill, /Recreate \| Skip by default \| Original reference \| Original reference/);
-  assert.match(skill, /Redesign \| Required by default/);
-  assert.match(skill, /Create \| Required by default/);
-  assert.match(skill, /one structured follow-up question with exactly three mutually exclusive choices/);
-  assert.match(skill, /`request_user_input`/);
+  assert.match(skill, /效果图（Effect Image）不是通用必经步骤/);
+  assert.match(skill, /Recreate \| 默认跳过 \| 原始参考图 \| 原始参考图/);
+  assert.match(skill, /Redesign \| 默认必需/);
+  assert.match(skill, /Create \| 默认必需/);
+  assert.match(skill, /一个问题，恰好三个互斥选项/);
+  assert.match(skill, /references\/host-adapters\.md/);
   assert.match(skill, /"id": "workflow_mode"/);
   assert.match(skill, /"label": "截图还原 \(Recommended\)"/);
   assert.match(skill, /"label": "参考重设计"/);
   assert.match(skill, /"label": "从零创建"/);
-  assert.match(skill, /first navigate the user to the Chinese visual launcher/);
-  assert.match(skill, /host's in-app browser or navigation capability/);
+  assert.match(skill, /先把用户引导到中文可视化入口/);
+  assert.match(skill, /宿主有内置浏览器或导航能力时用它打开/);
   assert.match(skill, /https:\/\/www\.ondesign\.tech\/launcher\.html\?lang=zh/);
-  assert.match(skill, /Visible Workbench And Progressive Alignment/);
-  assert.match(skill, /Ask only load-bearing questions/);
-  assert.match(skill, /Group related choices/);
-  assert.match(skill, /A successful file write, build, image-generation response, or validator exit is not by itself visual proof/);
-  assert.match(skill, /both structural evidence .* and visual evidence/);
-  assert.match(skill, /change only the rejected or failing scope/);
-  assert.match(skill, /Do not repeat an identical paid or time-consuming image generation/);
+  assert.match(skill, /可见工作台与渐进式确认/);
+  assert.match(skill, /只问关键问题/);
+  assert.match(skill, /逐题询问/);
+  assert.doesNotMatch(skill, /Group related choices/);
+  assert.match(skill, /本身都不是视觉证据/);
+  assert.match(skill, /同时需要结构证据.*和视觉证据/);
+  assert.match(skill, /只修改被拒绝或失败的范围/);
+  assert.match(skill, /不要原样重复付费或耗时的出图/);
   assert.match(skill, /https:\/\/www\.ondesign\.tech\/library\.html\?lang=zh/);
   assert.match(guide, /Recreate：直接从原参考图拆分/);
   assert.match(guide, /Redesign \/ Create：先生成并检查完整 Effect Image/);
@@ -150,7 +151,7 @@ test("npm package contains Skill tooling and excludes gallery sources", () => {
     { cwd: repoRoot, encoding: "utf8" },
   );
   const files = new Set(JSON.parse(stdout)[0].files.map((file) => file.path));
-  for (const required of ["SKILL.md", "README.md", "PRODUCTION.md", "validate.ps1", "agents/openai.yaml", "scripts/image2-ui", "scripts/image2_asset.py", "scripts/image2_orchestrate.mjs", "scripts/workflow_state_machine.mjs", "scripts/ui_compare.mjs", "scripts/ui_loop.mjs", "scripts/ui_output_audit.mjs", "runtime/runner.mjs", "runtime/state-store.mjs", "runtime/tools/registry.mjs", "runtime/scheduler/roles.mjs", "runtime/scheduler/dag.mjs", "runtime/scheduler/executor.mjs", "schemas/state.schema.json", "assets/readme/hero.svg", "assets/readme/video-previews/fufu-bakery-demo.gif", "assets/readme/video-previews/plate-play-demo.gif", "assets/readme/video-previews/today-news-demo.gif", "assets/readme/video-previews/fithub-demo.gif"]) {
+  for (const required of ["SKILL.md", "README.md", "PRODUCTION.md", "scripts/validate.mjs", "agents/openai.yaml", "scripts/image2-ui", "scripts/image2_asset.py", "scripts/image2_orchestrate.mjs", "scripts/workflow_state_machine.mjs", "scripts/ui_compare.mjs", "scripts/ui_loop.mjs", "scripts/ui_output_audit.mjs", "runtime/runner.mjs", "runtime/state-store.mjs", "runtime/tools/registry.mjs", "runtime/scheduler/roles.mjs", "runtime/scheduler/dag.mjs", "runtime/scheduler/executor.mjs", "schemas/state.schema.json", "assets/readme/hero.svg", "assets/readme/video-previews/fufu-bakery-demo.gif", "assets/readme/video-previews/plate-play-demo.gif", "assets/readme/video-previews/today-news-demo.gif", "assets/readme/video-previews/fithub-demo.gif"]) {
     assert.ok(files.has(required), required);
   }
   assert.ok([...files].some((file) => file.startsWith("references/")));

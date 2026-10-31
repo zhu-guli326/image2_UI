@@ -33,11 +33,8 @@ jobs:
       - name: Install Chromium
         run: npx playwright install --with-deps chromium
 
-      - name: Run tests
-        run: npm test
+      - name: Validate skill (required files, tests, npm package, Python syntax)
+        run: npm run validate
 
       - name: Check image2 channel diagnostics
         run: npm run doctor
-
-      - name: Check npm package contents
-        run: npm run pack:check

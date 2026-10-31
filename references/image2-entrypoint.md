@@ -1,12 +1,12 @@
 # image2 入口发现与验真
 
-这份文档用于回答一个关键问题：当前项目里“image2”到底怎么调用。默认答案是先尝试项目显式配置的 `image2` 命令；如果项目命令不可用，再进入本地 `imagegen` CLI fallback。当前 Codex 会话如果暴露内置 `image_gen` 工具，也可以作为 native image2 来源，但它不能由 shell doctor 直接检测。
+这份文档用于回答一个关键问题：当前项目里“image2”到底怎么调用。默认答案是先尝试项目显式配置的 `image2` 命令；如果项目命令不可用，再进入本地 `imagegen` CLI fallback。当前 Codex 会话如果暴露内置 `image_gen` 工具，也可以作为 native image2 来源，但它不能由 shell doctor 直接检测。Claude Code 没有内置出图工具，直接走 `IMAGE2_COMMAND` / `image2` 或 `scripts/image2_asset.py` 包装器（见 [宿主适配](host-adapters.md)）。
 
 ## 1. 先确认项目约束
 
 优先读取这些位置：
 
-1. 当前会话或项目根目录的 `AGENTS.md`
+1. 当前会话或项目根目录的 `AGENTS.md`（Codex）或 `CLAUDE.md`（Claude Code）
 2. 用户在消息里明确写出的 image2 调用方式
 3. 项目 README、scripts、package scripts、CLI 文档或已有 demo 记录
 4. 环境变量、命令行工具或本地脚本中明确命名为 image2 或 imagegen 的入口
@@ -28,7 +28,7 @@ rg -n "image2|IMAGE2|generate.*image|image.*generate|生图|出图|绘图|assets
 - `image2` 命令存在于 `PATH`
 - 用户明确说“用这个命令/脚本/API 调 image2”
 - 项目文档明确把某个命令、脚本、MCP 工具或服务命名为 image2
-- 当前 Codex 环境的 AGENTS.md 明确规定了 image2 调用方式
+- 当前环境的 AGENTS.md / CLAUDE.md 明确规定了 image2 调用方式
 - 既有代码中存在稳定的 image2 封装，并且命名、参数、输出路径都能确认
 - 本仓库的 `scripts/image2_asset.py` 成功执行；它会优先走项目 image2，再按需走本地 imagegen CLI fallback
 

@@ -5,10 +5,8 @@
 Use Node.js 20+, Python 3.10+, and run the complete local gate before opening a change:
 
 ```bash
-npm test
+npm run validate   # required files, tests, npm pack, Python syntax (any OS)
 npm run doctor
-npm run pack:check
-python3 -m py_compile scripts/image2_asset.py
 git diff --check
 ```
 
@@ -22,4 +20,4 @@ Do not commit `.image2-ui/` loop output, credentials, generated API responses, o
 
 ## Pull requests
 
-Describe the user-facing behavior and list the checks you ran. Keep gallery and demo changes in `ui_case`; keep this repository focused on the generation runtime, Codex integration, and CLI.
+Describe the user-facing behavior and list the checks you ran. Keep gallery and demo changes in `ui_case`; keep this repository focused on the generation runtime, host integrations (Codex, Claude Code), and CLI.

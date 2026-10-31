@@ -29,6 +29,7 @@ try {
   if (parsed.task) runtimeArgs.push("--task", parsed.task);
   if (parsed.reference) runtimeArgs.push("--reference", parsed.reference);
   if (parsed.workflow) runtimeArgs.push("--mode", parsed.workflow);
+  if (parsed.agent) runtimeArgs.push("--agent", parsed.agent);
   if (parsed.agentCommand) runtimeArgs.push("--agent-command", parsed.agentCommand);
   if (parsed.model) runtimeArgs.push("--model", parsed.model);
   if (parsed.requireEffectReview) runtimeArgs.push("--require-effect-review");
@@ -50,6 +51,7 @@ function parseCompatArgs(argv) {
     "--workflow",
     "--mode",
     "--max-parallel",
+    "--agent",
     "--agent-command",
     "--model",
   ]);
@@ -85,6 +87,7 @@ function parseCompatArgs(argv) {
     workflow,
     schedulerMode,
     maxParallel,
+    agent: values["--agent"] || null,
     agentCommand: values["--agent-command"] || null,
     model: values["--model"] || null,
     dryRun: argv.includes("--dry-run"),
@@ -96,7 +99,7 @@ function parseCompatArgs(argv) {
 
 function printUsage() {
   console.log(`Usage:
-  image2-ui orchestrate <project-dir> --task "..." [--reference reference.png] [--workflow recreate|redesign|create] [--mode parallel|sequential] [--max-parallel N] [--agent-command COMMAND] [--model MODEL] [--dry-run] [--json]
+  image2-ui orchestrate <project-dir> --task "..." [--reference reference.png] [--workflow recreate|redesign|create] [--mode parallel|sequential] [--max-parallel N] [--agent codex|claude-code] [--agent-command COMMAND] [--model MODEL] [--dry-run] [--json]
 
 Compatibility command:
   orchestrate now delegates to the durable UI Harness Runtime with --execution multi-agent.

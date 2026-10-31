@@ -2,3 +2,4 @@ scripts/__pycache__/
 **/*.py[cod]
 .image2-ui/
 .DS_Store
+.npm-cache-check/
