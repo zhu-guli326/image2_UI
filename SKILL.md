@@ -134,6 +134,10 @@ description: Use when the user asks to recreate a UI from a screenshot or design
 
 `recreate` 分析与最终比对必须读取 [局部细节判断](references/reference-detail-fidelity.md)。放大判断贴纸 / 票券的轮廓、齿口、凹缺、倾斜、叠放和文字特征；例如 Selling Fast 不能简化为旋转矩形。用可编辑矢量外形配独立文字还原，不把所有异形元素统一成标准组件外观。
 
+## 手绘线稿：抠图干净再使用
+
+需要叠放的手绘线稿 / 涂鸦优先做透明抠图，保留细线、镂空与实心填充。检查杂边、白边、底色色晕和矩形背景，不把带底色的图片直接贴到页面上。执行与验收见 [高清素材规范](references/hd-reference-assets.md#手绘线稿优先透明抠图)。
+
 ## 高清素材：先传原图，再生成与替换
 
 截图中的内容图片清晰度不足或用户要求高清时，必须读取 [参考图驱动的高清素材](references/hd-reference-assets.md)。优先找清晰源图；需要生成时，将原始素材实际作为参考图传入 image2，明确保留构图、比例、姿态与线条，不用纯文字自由重画冒充截图还原。高清素材需保存进项目，记录来源与尺寸，对照原图检查后替换 Figma / 网页的实际引用，再检查最终渲染；不能只展示生成图片就算完成。
